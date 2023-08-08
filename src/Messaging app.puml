@@ -1,0 +1,85 @@
+@startuml
+!theme bluegray
+
+package "Entities" {
+  class User {
+    id: Long
+    name: String
+    email: String
+    password: String
+    dateOfBirth: LocalDate
+    posts: List<Post>
+    friends: List<User>
+    +getters()
+    +setters()
+  }
+
+  class Post {
+    id: Long
+    content: String
+    datePosted: LocalDateTime
+    author: User
+    comments: List<Comment>
+    +getters()
+    +setters()
+  }
+
+  class Comment {
+    id: Long
+    content: String
+    datePosted: LocalDateTime
+    author: User
+    post: Post
+    +getters()
+    +setters()
+  }
+}
+
+package "Repositories" {
+  interface UserRepository
+  interface PostRepository
+  interface CommentRepository
+}
+
+package "Service Classes" {
+  class UserService {
+    +CRUD methods
+    +addFriend()
+    +removeFriend()
+  }
+
+  class PostService {
+    +CRUD methods
+    +addComment()
+  }
+
+  class CommentService {
+    +CRUD methods
+  }
+}
+
+package "Controller Classes" {
+  class UserController {
+    +RESTful endpoints
+  }
+
+  class PostController {
+    +RESTful endpoints
+  }
+
+  class CommentController {
+    +RESTful endpoints
+  }
+}
+
+User --> "*" Post
+User --> "*" User: friends
+Post --> "*" Comment
+UserRepository ..> User
+PostRepository ..> Post
+CommentRepository ..> Comment
+UserController --> UserService
+PostController --> PostService
+CommentController --> CommentService
+
+@enduml
